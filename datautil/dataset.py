@@ -45,7 +45,7 @@ class BaseDataset(Dataset):
         image = Image.fromarray(img_name)
         if self.category == "image":
             landmarks = self.landmarks_frame.iloc[idx, 2].astype('int')
-            landmarks = [0 if landmarks == i else 1 for i in xrange(1, 56)]
+            landmarks = [1 if landmarks == i else 0 for i in xrange(1, 56)]
         else:
             landmarks = self.landmarks_frame.iloc[idx, 1]
             landmarks = landmarks
