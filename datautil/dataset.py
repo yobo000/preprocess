@@ -2,7 +2,7 @@
 
 import os
 import pandas as pd
-from skimage import io
+from PIL import Image
 from torch.utils.data import Dataset
 
 # Ignore warnings
@@ -13,8 +13,8 @@ warnings.filterwarnings("ignore")
 class CategoriesDataset(object):
     """Categories Landmarks datase for beauty, fashion, mobile"""
 
-    def __init__(self, cag):
-        self.category = cag
+    def __init__(self, category):
+        self.category = category
 
     def __call__(self, *args):
         return BaseDataset(*args)
@@ -34,6 +34,7 @@ class BaseDataset(Dataset):
         self.landmarks_frame = pd.read_csv(csv_file)
         self.root_dir = root_dir
         self.transform = transform
+        self.category = "image"
 
     def __len__(self):
         return len(self.landmarks_frame)
@@ -41,9 +42,13 @@ class BaseDataset(Dataset):
     def __getitem__(self, idx):
         img_name = os.path.join(self.root_dir,
                                 self.landmarks_frame.iloc[idx, 3])
-        image = io.imread(img_name)
-        landmarks = self.landmarks_frame.iloc[idx, 2]
-        landmarks = landmarks.astype('int')
+        image = Image.fromarray(img_name)
+        if self.category == "image":
+            landmarks = self.landmarks_frame.iloc[idx, 2].astype('int')
+            landmarks = [0 if landmarks == i else 1 for i in xrange(1, 56)]
+        else:
+            landmarks = self.landmarks_frame.iloc[idx, 1]
+            landmarks = landmarks
         sample = {'image': image, 'landmarks': landmarks}
 
         if self.transform:
