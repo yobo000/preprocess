@@ -104,7 +104,6 @@ bin/
 
 # mypy
 .mypy_cache/
-/data
 TODO.md
 pip-selfcheck.json
 include/
