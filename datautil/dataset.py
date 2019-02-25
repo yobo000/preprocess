@@ -68,8 +68,7 @@ class ImagesDataset(Dataset):
         if self.train:
             img_path = os.path.join(self.root_dir,
                                     self.landmarks_frame.iloc[idx, 3])
-            with open(img_path, 'rb') as f:
-                image = Image.open(f)
+            image = Image.open(img_path)
             # image = Image.fromarray(img_path)
             landmarks = self.landmarks_frame.iloc[idx, 2].astype('int')
             # landmarks = [1 if landmarks == i else 0 for i in range(1, 58)]
@@ -77,7 +76,7 @@ class ImagesDataset(Dataset):
         else:
             img_path = os.path.join(self.root_dir,
                                     self.landmarks_frame.iloc[idx, 2])
-            image = Image.fromarray(img_path)
+            image = Image.open(img_path)
             landmarks = landmarks
             sample = {'image': image}
 
